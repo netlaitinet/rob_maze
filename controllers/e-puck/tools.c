@@ -4,7 +4,6 @@
 #include "strafe.h"
 #include "history.h"
 #include <stdlib.h>
-#include <webots/supervisor.h>
 
 int simplecounter;
 int turnscounter; // during continuous hard turn 
