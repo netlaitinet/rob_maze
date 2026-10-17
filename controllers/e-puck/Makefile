@@ -1,4 +1,4 @@
-C_SOURCES = e-puck.c hardware.c runtime.c history.c compass.c orient.c moves.c strafe.c tools.c
+C_SOURCES = e-puck.c history.c compass.c orient.c moves.c strafe.c tools.c
 
 CFLAGS += -Wall -Wextra -Werror
 
