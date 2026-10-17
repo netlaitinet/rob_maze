@@ -10,14 +10,9 @@ git switch XY
 
 # compile instructions
 
-	Only dependency is nix develop,
-	just run ./initial-setup.sh and then ./run.sh
-	
-	If you cant use nix, then:
-	Alternatively follow generic ubuntu+webots instructions.
-	the project normally runs inside a ubuntu container.
-	the compile command is 'make -C "/home/$USER/rob_maze/controllers/e-puck"'
-	The project will work as any normal webots project should, the directory structure is identical to the default convention.
+On arduino branch, depends on arduino-cli.
+./compile-arduino.sh
+
 
 	If you are on windows, you probably cant compile due to missing math libraries. 
 	I cant really help with that since my computer is so old it cannot run windows.
