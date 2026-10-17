@@ -1,3 +1,6 @@
+# see final result immediately
+[shortest_path](controllers/e-puck/out.txt)
+
 # explainer here
 
 this became 3 projects.
@@ -186,7 +189,7 @@ I'll conclude the experiment here as success, and i learned a lot having to impl
 
 It was a huge undertaking, but I specially wanted to learn (C and microcontrollers), so i was highly motivated at every step of the process.
 
-# Its not the most "conventional" solution, but It achieves what i wanted it to, and within all the constraints.
+# It achieves all my set goals, and within all the constraints.
 
 I essentially reinvented everything from scratch. I have found this a good way to really internalize any problem and know what its really about, instead of just borrowing a library thats the most commonly used, and calling it done.
 
@@ -195,5 +198,3 @@ The robot has an internal representation of the shape of the maze. And it can *a
 The arduino still runs the strafing version of the code only. The code fits on the cheapest model of arduino. The total 8 ir sensors were put in the code as is, but in reality only sensors 5,6,7 and 0 got any active use. The XY version of the code would take more memory than fits on the arduino, but since i havent built an H-bridge arduino car with atleast 4 ir sensors, and accupied a room for its maze, It doesnt really make sense to adjust the code for it before the physical. What i would do is convert all floating points used throughout the code to uint_8 and scale appropriately to get the maximum accuracy from its range of 256. Then save the big grid in smaller detail, and tune the constants like turn time with its wheels to something else than 3 seconds, adjust the INTIMACY value, and relateds to match its ir sensors measuring power, and thats about it.
 
 
-# final todos before submitment
-prepare for video and presenteation, fill diary and check course page.
