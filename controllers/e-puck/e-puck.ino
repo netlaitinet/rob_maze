@@ -1,6 +1,6 @@
 extern "C" {
-#include "hardware.h"
 #include "history.h"
+#include "hardware.h"
 #include "orient.h"
 #include "compass.h"
 #include "baton.h"
