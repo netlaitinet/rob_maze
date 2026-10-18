@@ -2,4 +2,4 @@
 
 nix shell nixpkgs#distrobox nixpkgs#podman -c \
   distrobox-enter clean-webots -- env WEBOTS_HOME=/usr/local/webots \
-  make -C "/home/$USER/robot_maze_challenge/controllers/e-puck"
+  make -C "/home/$USER/rob_maze/controllers/e-puck"
