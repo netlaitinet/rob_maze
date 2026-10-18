@@ -32,10 +32,9 @@ git switch XY # drives slow but does shortest path calculation
 ```
 # constraints, these are just for fun.
 
-Allowed to *only use infrared* sensors, and the *code must compile for an arduino*.
-
-disallowed: encoders, gyro, compass, IMU, and other special hardware.
-disallowed: higher level languages and big libraries.
+- Allowed to *only use infrared* sensors, and the *code must compile for an arduino*.
+- disallowed: encoders, gyro, compass, IMU, and other special hardware.
+- disallowed: higher level languages and big libraries.
 
 Allowed to use perfect maze.
 
