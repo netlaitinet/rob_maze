@@ -1,0 +1,27 @@
+diff --git a/README.md b/README.md
+index e33d605..e925dac 100644
+--- a/README.md
++++ b/README.md
+@@ -15,19 +15,9 @@ git switch XY # drives slow but does shortest path calculation
+ # compile instructions
+ 
+ ```
+-	Only dependency is nix shell,
+-	just run ./initial-setup.sh and then ./run.sh
+-	
+-	If you cant use nix, then:
+-	Alternatively follow generic ubuntu+webots instructions.
+-	the project normally runs inside a ubuntu container.
+-	the compile command is 'make -C "/home/$USER/rob_maze/controllers/e-puck"'
+-	The project will work as any normal webots project should, the directory structure is identical to the default convention.
+-
+-	If you are on windows, compiling might require extra libraries. Use linux instead.
+-	My computer is too old to run windows, so not tested.
+-	
+-	everything is verified to work on both gentoo and nix os.
++On arduino branch, depends on arduino-cli.
++compile and flash on linux:
++./compile-arduino.sh
+ 
+ ```
+ # constraints, these are just for fun.
