@@ -1,7 +1,7 @@
 # see final result
 [shortest_path](controllers/e-puck/out.txt)
 
-# Maze navigation using only infrared
+# low-tech maze navigation in C using only infrared
 
 ```
 this became 3 separate projects.
@@ -18,14 +18,16 @@ git switch XY # drives slow but does shortest path calculation
 On arduino branch, depends on arduino-cli.
 compile and flash on linux:
 ./compile-arduino.sh
-```
 
+```
 # constraints, these are just for fun.
 
-Allowed to *only use infrared* sensors, and the *code must compile for an arduino*.
+I wanted more excitement from making the project extra hard.
 
-disallowed: encoders, gyro, compass, IMU, and other special hardware.
-disallowed: higher level languages and big libraries.
+* Allowed to _only_ use infrared sensors
+* The code must compile for an _arduino_.
+* Disallowed: encoders, gyro, compass, IMU, and other _special hardware_.
+* Disallowed: higher level languages, big libraries, and helpers in general.
 
 Allowed to use perfect maze.
 
@@ -36,9 +38,59 @@ Allowed to use perfect maze.
 
 2. implement a history to keep track of actions, and do math against the history to derive current position in a simulated maze in the robots mind.
 
-3. do math to answer whether we have completed the maze, and whether a shortest path can be calculated.
+3. do math to answer whether we have completed the maze, and whether a shorter path can be calculated.
 
-# design history
+4. I want to prove the robot is able to calculate the path, I'm not promising it will _drive_ it back. Answer/proof is enough.
+
+
+# The results:
+
+# It achieves all my set goals, and within all the constraints.
+
+# strafing and arduino details
+The arduino still runs the _strafing version_ of the code only.
+
+The strafing code is very fun to drive due to all the quick steering it does constantly. It has an urgent "chase" like feel.
+
+The strafing code will follow the left wall indefinitely, never losing it, even when driven tens of hours of continuous simulation.
+
+It will visit every cell of the maze, and doesnt collide or lose the wall. The supervisor reports it "scratching the wall" very briefly sometimes, but these are very light and rare. time colliding is less than tenth of a second during complete run around the maze, and it never caused measurable loss of heading during continuous 24h run.
+
+The code fits on the cheapest model of arduino. The total 8 ir sensors were left as the e-puck default in the code, but in reality only sensors 5,6,7 and 0 got any active use.
+
+The XY version of the code would take more memory than fits on the arduino.
+
+Tweaks to make it too fit: convert all floating points to uint8 and scale appropriately to get the maximum accuracy from its range of 256.
+
+Save the big grid in smaller detail and as custom uint8 described in the last sentence.
+
+Do final finetune adjustments to all variables to match the new wheel speeds and ir power.
+
+The code was uploaded to arduino mega, which has 8+ analog input pins.
+
+I dont have that many physical ir sensors, so no finetuning was attempted.
+
+# XY details
+
+The robot has an internal representation of the shape of the maze.
+It can *answer the question* "is there a shorter path" by describing a path that is shorter than the path the robot arrived via.
+
+A shortest theoretical path is not proven, but the ability to "better" the previous path is incremental in nature. The more effort spent, the closer the answer will be to "theoretical perfect". Currently looks like it can cut out roughly 75%.
+See the Ascii to compare full path to shortened path visually. (zoom out)
+[ASCII comparison of paths](controllers/e-puck/out.txt)
+
+It manages to keep all the problems/flaws/undercomings of everything tied together under a manageable margin of error.
+
+Trying to account for every possible mistake, and guard from proactively was the heart of the design.
+
+# real world value
+
+This also has real world value, for instance an expensive robot with "real" sensors can still keep a code like this as a redundancy backup strategy.
+
+A robot having 4 sensor sources would be able to afford to lose any 3 of them, and still have a way to compute a safe return back home by crutching on the single last sensors data and extra careful calculations. My code proves that whats optimal, and whats the minimum, has a huge gap that can be leveraged as a redundancy margin.
+
+
+# design history from start to finish
 
 copy only the libraries and boilerplate from the e-puck C example, so the simulation has access to IR and wheels only, and can be compiled and started.
 
@@ -46,6 +98,8 @@ refactor the source code files in a way that an arduino code would be written.
 The refactor abstracts all the robots internal logic into files that an arduino can consume aswell. theres no higher view of the simulation in the base logic, the simulation is hidden in runtime.c, and hardware folded into hardware.c
 
 The next steps all happen with only the robots internal perspective without a god mode view in order to make final refactor into an arduino version of the same code as streamlined as possible in advance.
+
+# first steps
 
 1.1 run forward until collision.
 1.2 stop before collision
@@ -59,6 +113,8 @@ The next steps all happen with only the robots internal perspective without a go
 2.1 create small bootstrap() function to get closer and then continuous spin-scan to catch a good reading from ir[5] and conclude a wall can be now hugged.
 2.2 create hugging function that can hug either left with ir[5] or right with ir[2] (later just defaulted to always hug with ir[5], but kept the original logic untouched.)
 
+# more structure
+
 3.0 start designing advanced logic for the robot to integrate its current situation by saving 32 last ir values to a ringbuffer, (later also archive 32 last wheel speeds into a similar ringbuffer.) to benefit in any hard situation that the robot runs into.
 
 also chose to save important reusable ephemereal data in baton.c, and at the very end of main loop command the wheels only once with what was the last thing recorded in baton.
@@ -71,6 +127,8 @@ small wheel slips and collisions should be recoverable from clamping against a w
 
 3.0.2.0 the compass will later be used to have more advanced reasoning the other functions can benefit from.
 
+# going fast
+
 4.0 replaced the conventional wall distance following with "strafing" where the robot tries to achieve parallel orientation to its hugging wall. instead of adjusting towards a sine wave, it tries to compress the wavyness into a single correction move s_manouver() that "departs" from the bad course towards the direction towards center line called INTIMACY. When it departs, it saves its previous trajectory heading, and after a dynamically calculated amount of departing, it flips to "arriving" and takes a sharp contraturn that erases the overshoot resulting to placement that is almost parallel to the original, but closer to the center line, and with less directional error.
 
 4.0.1 all of the stuff from 4.0 is simply done by looking at the custom built "instuments" and adjusting state markers and wheel speeds by simple arithmetic, like reusing a detected errors value as the input to the correcting function, or comparing the reading of ir[5] to all the previous readings in the ringbuffer in case a situation is confusing and needs extra processing.
@@ -79,7 +137,7 @@ small wheel slips and collisions should be recoverable from clamping against a w
 
 4.1 once strafing basics was implemented, added a boosting logic that starts accelerating the appropriate wheel to at the same time preadjust against a possible drift, and cause speed increase when there is only slight worry, and kill the boost when worry grows. now the robot can run parallel to a wall at average 4.6 and spikes of max 6.28 speed. with boost == 0.0 the robot is constrained to 3.0 speed to avoid slipping.
 
-# the base logic of general traversal is now in place, but the edge cases are various and hard to catch.
+# fighting against various edge cases
 
 5.0 a lot of fine tuning of strafing variables was done to make it more reliable.
 
@@ -94,7 +152,7 @@ it also had its worst form in spiralling question mark shaped part of the maze:
 
 ```
 
-# Currently the robot can visit all cells of the maze without an error.
+# Able to visit every cell of the maze.
 
 6.0 now its time to start building an internal map of the maze based on the tools from earlier steps.
 
@@ -102,7 +160,7 @@ it also had its worst form in spiralling question mark shaped part of the maze:
 
 6.2 im planning to now do all the "advanced" stuff like shortest path algorithm starting from here.
 
-# this is where problems start to pile up.
+# hidden problems start to surface.
 
 somehow the robots self calculated compass gets completely spun over by errors big as 90 degrees and clamps wrong every time after especially restless maze partitions.
 
@@ -160,7 +218,9 @@ Im not sure if a maze even counts as perfect if it has big empty areas, but that
 Generally the blockier grid size, the more greedily it discards. The system is not tuned to match the dimensions of my maze.
 Nothin here is finetuned to match anything perfectly, and im trusting the self-correcting mechanisms to carry all the weight instead.
 
-A unrelated python script was used to convert the robots answer to a visual ASCII drawing as part of the developer tooling. The python never ran on the robot, and was purely a visual side effect to improve ergonomics. it had no effect on the robot whatsoever.
+A small python script was used to convert the robots answer to a visual ASCII drawing for human inspection. The robot keeps a long array of numbers itself.
+
+a run script was made to auto run the simulation in fast forward, then stop at the end corner, and upon exit (Ctrl-q in webots) open the ascii in firefox. 
 
 10.0 redesigned the grid/stack/mapping in grid.c, made it more modular and added many improvements. It can now add a safety margin around the cells, prevent popping too quickly, adjust the margins and robots "fatness" to target the center line better. By small improvements, It actually produced the "perfect" shortest path eventually.
 
@@ -174,14 +234,7 @@ The robot needs to do *a lot* of extra "thinking" to make sense of the weirdly s
 
 It proves the whole chain of techniques will work in concert to achieve the goal end to end.
 
-I'll conclude the experiment here as success, and i learned a lot having to implement every low-level detail myself from scratch.
+I'll conclude the experiment here as success, and i learned a lot doing all the low-level details.
 
-It was a huge undertaking, but I specially wanted to learn C and microcontrollers
-
-# It achieves all my set goals, and within all the constraints.
-
-The robot has an internal representation of the shape of the maze. And it can *answer the question* "is there a shorter path" by describing a path that is shorter than the path the robot arrived via.
-
-The arduino still runs the strafing version of the code only. The code fits on the cheapest model of arduino. The total 8 ir sensors were put in the code as is, but in reality only sensors 5,6,7 and 0 got any active use. The XY version of the code would take more memory than fits on the arduino, but since i havent built an H-bridge arduino car with atleast 4 ir sensors, and accupied a room for its maze, It doesnt really make sense to adjust the code for it before the physical. What i would do is convert all floating points used throughout the code to uint_8 and scale appropriately to get the maximum accuracy from its range of 256. Then save the big grid in smaller detail, and tune the constants like turn time with its wheels to something else than 3 seconds, adjust the INTIMACY value, and relateds to match its ir sensors measuring power, and thats about it.
-
+It was a lot of work, but I specially wanted to get better at C and microcontrollers.
 
