@@ -3,16 +3,18 @@
 
 # Maze navigation using only infrared
 
+```
 this became 3 separate projects.
 change branch to see them all
-```
+
 git switch strafe # driving fast
 git switch arduino # .ino version of strafe
 git switch XY # drives slow but does shortest path calculation
-
+```
 
 # compile instructions
 
+```
 	Only dependency is nix shell,
 	just run ./initial-setup.sh and then ./run.sh
 	
@@ -27,6 +29,7 @@ git switch XY # drives slow but does shortest path calculation
 	
 	everything is verified to work on both gentoo and nix os.
 
+```
 # constraints, these are just for fun.
 
 Allowed to *only use infrared* sensors, and the *code must compile for an arduino*.
