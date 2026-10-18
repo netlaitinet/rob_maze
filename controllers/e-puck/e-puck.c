@@ -10,7 +10,7 @@
 #include <math.h>
 #include <webots/supervisor.h>
 
-static const double maze_hyp = 1000.0;
+static const double maze_hyp = 1000.0; // approx sqrt((700*700)*2)
 static double oldhyp;
 
 struct baton baton = {.lost_heading = -1};
