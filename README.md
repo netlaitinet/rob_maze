@@ -1,19 +1,19 @@
-# see final result immediately
+# see final result
 [shortest_path](controllers/e-puck/out.txt)
 
-# explainer here
+# Maze navigation using only infrared
 
-this became 3 projects.
+this became 3 separate projects.
 change branch to see them all
 ```
-git switch strafe
-git switch arduino
-git switch XY
-```
+git switch strafe # driving fast
+git switch arduino # .ino version of strafe
+git switch XY # drives slow but does shortest path calculation
+
 
 # compile instructions
 
-	Only dependency is nix develop,
+	Only dependency is nix shell,
 	just run ./initial-setup.sh and then ./run.sh
 	
 	If you cant use nix, then:
@@ -109,7 +109,7 @@ it also had its worst form in spiralling question mark shaped part of the maze:
 
 6.2 im planning to now do all the "advanced" stuff like shortest path algorithm starting from here.
 
-# this is where everything starts falling apart.
+# this is where problems start to pile up.
 
 somehow the robots self calculated compass gets completely spun over by errors big as 90 degrees and clamps wrong every time after especially restless maze partitions.
 
@@ -125,16 +125,12 @@ This in itself is impressive in my opinion, and while it looks fun, the amount o
 
 # without a reliable long term compass, the long term X/Y map also loses any meaning.
 
-At this point im considering to not fix it, and give up instead. I think i have already done enough work to go well beyond the minimum for the course.
-
-Also the strafing function is a *work of art* and would feel bad to omit.
-
 
 7.0 flashing the code on an arduino mega by making the e-puck.c into e-puck.ino and changing the motor and ir handles to match arduino. The code compiles and fits. The variables used dont match exatcly, but by just finetuning the variables again would result in the same behaviour, since none of the code is different, only the familiar sensor and motor values are different between them.
 
 8.0 Replacing stafe.c with no_strafe.c that achieves generic sine wave shaped wall following with a bit of smoothing and runs very slow to be sure not to ever slip.
 
-8.1 With this more boring no_strafe the orientation and location estimation can be retried.
+8.1 With this more stable no_strafe the orientation and location estimation can be retried.
 
 8.2 The robot visits every cell of the maze with so little slipping that the compass self-heals it all to 0.
 
@@ -187,11 +183,9 @@ It proves the whole chain of techniques will work in concert to achieve the goal
 
 I'll conclude the experiment here as success, and i learned a lot having to implement every low-level detail myself from scratch.
 
-It was a huge undertaking, but I specially wanted to learn (C and microcontrollers), so i was highly motivated at every step of the process.
+It was a huge undertaking, but I specially wanted to learn C and microcontrollers
 
 # It achieves all my set goals, and within all the constraints.
-
-I essentially reinvented everything from scratch. I have found this a good way to really internalize any problem and know what its really about, instead of just borrowing a library thats the most commonly used, and calling it done.
 
 The robot has an internal representation of the shape of the maze. And it can *answer the question* "is there a shorter path" by describing a path that is shorter than the path the robot arrived via.
 
