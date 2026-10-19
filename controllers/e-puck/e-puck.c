@@ -33,4 +33,5 @@ void loop(void) {
 
   history_push(); // wheels have been chosen, push them to the history.
   set_wheels(baton.left, baton.right); // always last one to touch wheels
+  printf(".");
 }
