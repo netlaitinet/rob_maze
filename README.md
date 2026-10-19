@@ -75,7 +75,7 @@ these are not necessary to run the base version, but only if you want the "compl
 
 # screenshot 
 
-[screenshot](screenshot.png)
+![screenshot](screenshot.png)
 
 # learning experience
 
