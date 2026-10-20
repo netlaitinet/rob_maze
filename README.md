@@ -1,5 +1,8 @@
 # see final result
-[shortest_path](controllers/e-puck/out.txt)
+[ASCII travel path](controllers/e-puck/out.txt)
+
+
+[video presentation](https://www.youtube.com/watch?v=Zj3bKJN2SxE)
 
 # low-tech maze navigation in C using only infrared
 
@@ -75,7 +78,7 @@ these are not necessary to run the base version, but only if you want the "compl
 
 # screenshot 
 
-TODO
+![screenshot](screenshot.png)
 
 # learning experience
 
