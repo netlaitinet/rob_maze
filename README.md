@@ -1,5 +1,7 @@
 # see final result
 [ASCII travel path](controllers/e-puck/out.txt)
+
+
 [video presentation](https://www.youtube.com/watch?v=Zj3bKJN2SxE)
 
 # low-tech maze navigation in C using only infrared
