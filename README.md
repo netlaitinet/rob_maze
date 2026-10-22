@@ -249,14 +249,11 @@ The soft compass is useful short term, yet completely unreliable in long term.
 
 # The reason for the error turned out to be my accelerating strafing function.
 
-When the robot aggressively adjusts its wheels to accelerate and avoid collision at the same time, the wheels are in a constant state of *drifting* as in car racing. the code is fast and complicated enough to keep full control of the vehicle for extended periods of quick continuous adjustment.
-
-This in itself is impressive in my opinion, and while it looks fun, the amount of continuous micro slipping causes the compass to gradually lose its heading and clamp a wrong cardinal if enough drifting has occured between the previous and the next clamp.
+When the robot aggressively adjusts its wheels to avoid collision at a state where its already reached realatively high speed, the inertia is enough to cause a major slip. The robot regains traction after few milliseconds, but doing this repeatedly causes the compass to gradually lose its heading and clamp a wrong cardinal if enough drifting has occured between the previous and the next clamp. There might also be other micro slipping happening during finer strafing adjusments, but not as visible.
 
 6.3 added smartwheels() function to limit overly drastic change to wheels requested by the other less gentle functions.
 
 # without a reliable long term compass, the long term X/Y map also loses any meaning.
-
 
 7.0 flashing the code on an arduino mega by making the e-puck.c into e-puck.ino and changing the motor and ir handles to match arduino. The code compiles and fits. The variables used dont match exatcly, but by just finetuning the variables again would result in the same behaviour, since none of the code is different, only the familiar sensor and motor values are different between them.
 
